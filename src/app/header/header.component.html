@@ -9,12 +9,13 @@
                 <li class="nav-item"><a href="#" class="nav-link" (click)="onRecipesClick()">Recipes</a></li>
                 <li class="nav-item"><a href="#" class="nav-link" (click)="onShoppingListClick()">Shopping List</a></li>
             </ul>
+
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button">Manage</a>
-                    <div class="dropdown-menu">
-                        <a href="#" class="dropdown-item">Save Data</a>
-                        <a href="#" class="dropdown-item">Fetch Data</a>
+                <li class="nav-item" ngbDropdown>
+                    <a href="#" class="nav-link" role="button" ngbDropdownToggle>Manage</a>
+                    <div ngbDropdownMenu>
+                        <a href="#" ngbDropdownItem>Save Data</a>
+                        <a href="#" ngbDropdownItem>Fetch Data</a>
                     </div>
                 </li>
             </ul>
