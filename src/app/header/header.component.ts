@@ -19,11 +19,13 @@ export class HeaderComponent implements OnInit {
 
   onRecipesClick() {
     this.showRecipes = !this.showRecipes;
+    this.showShoppingList = false;
     this.toggleRecipes.emit(this.showRecipes);
   }
 
   onShoppingListClick() {
     this.showShoppingList = !this.showShoppingList;
+    this.showRecipes = false;
     this.toggleShoppingList.emit(this.showShoppingList);
   }
 

@@ -11,9 +11,11 @@ export class AppComponent {
 
   onRecipesToggle(recipesState: boolean) {
     this.showRecipes = recipesState;
+    this.showShoppingList = false;
   }
 
   onShoppingListToggle(shoppingListState: boolean) {
     this.showShoppingList = shoppingListState;
+    this.showRecipes = false;
   }
 }
