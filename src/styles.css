@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+
+.first-button-row {
+    margin-left: 0px;
+    margin-right: 2px;
+}
+
+.middle-button-row {
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.last-button-row {
+    margin-left: 2px;
+    margin-right: 0px;
+}
