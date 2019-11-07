@@ -14,8 +14,8 @@
                 <li class="nav-item" ngbDropdown>
                     <a style="cursor: pointer;" class="nav-link" role="button" ngbDropdownToggle>Manage</a>
                     <div ngbDropdownMenu>
-                        <a style="cursor: pointer;" ngbDropdownItem>Save Data</a>
-                        <a style="cursor: pointer;" ngbDropdownItem>Fetch Data</a>
+                        <a style="cursor: pointer;" ngbDropdownItem (click)="onSaveData()">Save Data</a>
+                        <a style="cursor: pointer;" ngbDropdownItem (click)="onFetchData()">Fetch Data</a>
                     </div>
                 </li>
             </ul>
