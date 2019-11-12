@@ -13,10 +13,15 @@ export class RecipeEditComponent implements OnInit {
     editMode: boolean = false;
     recipeForm: FormGroup;
 
+    get ingredientsControls() {
+        return (this.recipeForm.get('ingredients') as FormArray).controls;
+    }
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private recipeService: RecipeService) { }
+        private recipeService: RecipeService
+    ) { }
 
     ngOnInit() {
         this.route.params
