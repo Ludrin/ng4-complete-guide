@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import { catchError, tap } from 'rxjs/operators';
-import { throwError } from 'rxjs';
-
 import { User } from './user.model';
-import { environment } from 'src/environments/environment';
 import * as fromApp from '../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
 
@@ -27,48 +21,8 @@ export class AuthService {
     private tokenExpirationTimer: any;
 
     constructor(
-        private httClient: HttpClient,
-        private router: Router,
         private store: Store<fromApp.AppState>
     ) { }
-
-    signUp(email: string, password: string) {
-        return this.httClient.post<AuthResponseData>(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIKey,
-            {
-                email: email,
-                password: password,
-                returnSecureToken: true
-            }
-        ).pipe(catchError(this.handleError), tap(responseData => {
-            this.handleAuthentication(
-                responseData.email,
-                responseData.localId,
-                responseData.idToken,
-                +responseData.expiresIn
-            );
-        })
-        );
-    }
-
-    logIn(email: string, password: string) {
-        return this.httClient.post<AuthResponseData>(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + environment.firebaseAPIKey,
-            {
-                email: email,
-                password: password,
-                returnSecureToken: true
-            }
-        ).pipe(catchError(this.handleError), tap(responseData => {
-            this.handleAuthentication(
-                responseData.email,
-                responseData.localId,
-                responseData.idToken,
-                +responseData.expiresIn
-            );
-        })
-        );
-    }
 
     autoLogIn() {
         const userData: {
@@ -90,7 +44,7 @@ export class AuthService {
         );
 
         if (loadedUser.token) {
-            this.store.dispatch(new AuthActions.Login({
+            this.store.dispatch(new AuthActions.AuthenticateSuccess({
                 email: loadedUser.email,
                 userId: loadedUser.id,
                 token: loadedUser.token,
@@ -104,7 +58,6 @@ export class AuthService {
 
     logOut() {
         this.store.dispatch(new AuthActions.Logout());
-        this.router.navigate(['/auth']);
         localStorage.removeItem('userData');
 
         if (this.tokenExpirationTimer) {
@@ -120,42 +73,4 @@ export class AuthService {
         }, expirationDuration)
     }
 
-    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
-        const expirationDate = new Date(
-            new Date().getTime() + expiresIn * 1000
-        );
-
-        const user = new User(email, userId, token, expirationDate);
-        this.store.dispatch(new AuthActions.Login({
-            email,
-            userId,
-            token,
-            expirationDate
-        }));
-        this.autoLogOut(expiresIn * 1000);
-
-        localStorage.setItem('userData', JSON.stringify(user));
-    }
-
-    private handleError(errorResponse: HttpErrorResponse) {
-        let errorMessage = 'An unknown error occurred!';
-
-        if (!errorResponse.error || !errorResponse.error.error) {
-            return throwError(errorMessage);
-        }
-
-        switch (errorResponse.error.error.message) {
-            case 'EMAIL_EXISTS':
-                errorMessage = 'This email exists already';
-                break;
-            case 'EMAIL_NOT_FOUND':
-                errorMessage = 'This email does not exist';
-                break;
-            case 'INVALID_PASSWORD':
-                errorMessage = 'This password is not correct';
-                break;
-        }
-
-        return throwError(errorMessage);
-    }
 }
